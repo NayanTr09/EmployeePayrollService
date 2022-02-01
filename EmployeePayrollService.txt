@@ -1,0 +1,110 @@
+
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.36 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sys                |
+| testdb             |
++--------------------+
+6 rows in set (0.02 sec)
+
+mysql> use payroll_service;
+Database changed
+mysql> select database();
++-----------------+
+| database()      |
++-----------------+
+| payroll_service |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> create table employee_payroll
+    -> (
+    -> id INT unsigned NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(150) NOT NULL,
+    -> salary Double NOT NULL,
+    -> start DATE NOT NULL,
+    -> PRIMARY KEY (id)
+    -> );
+Query OK, 0 rows affected (4.19 sec)
+
+mysql> Describe employee_payroll;
++--------+--------------+------+-----+---------+----------------+
+| Field  | Type         | Null | Key | Default | Extra          |
++--------+--------------+------+-----+---------+----------------+
+| id     | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(150) | NO   |     | NULL    |                |
+| salary | double       | NO   |     | NULL    |                |
+| start  | date         | NO   |     | NULL    |                |
++--------+--------------+------+-----+---------+----------------+
+4 rows in set (0.45 sec)
+
+mysql> INSERT INTO employee_payroll ( name, salary, start ) VALUES
+    -> ( 'BILL', 1000000.00, '2018-01-03' ),
+    -> ( 'Terisa', 2000000.00, '2019-11-13' ),
+    -> ( 'Charlie', 3000000.00, '2020-05-21' );
+Query OK, 3 rows affected (0.49 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT salary from employee_payroll where name = 'Bill';
++---------+
+| salary  |
++---------+
+| 1000000 |
++---------+
+1 row in set (0.12 sec)
+
+mysql> Select * from employee_payroll where start between cast('2018-01-01' as date) and date(now());
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  1 | BILL    | 1000000 | 2018-01-03 |
+|  2 | Terisa  | 2000000 | 2019-11-13 |
+|  3 | Charlie | 3000000 | 2020-05-21 |
++----+---------+---------+------------+
+3 rows in set (0.13 sec)
+
+mysql> alter table employee_payroll ADD gender CHAR(1) AFTER name;
+Query OK, 0 rows affected (3.31 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update employee_payroll set gender = 'F' where name = 'Terisa';
+Query OK, 1 row affected (0.28 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set gender = 'M' where name = 'Bill' or name = 'Charlie';
+Query OK, 2 rows affected (0.16 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> Select * from employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | BILL    | M      | 1000000 | 2018-01-03 |
+|  2 | Terisa  | F      | 2000000 | 2019-11-13 |
+|  3 | Charlie | M      | 3000000 | 2020-05-21 |
++----+---------+--------+---------+------------+
+3 rows in set (0.11 sec)
+
+mysql> update employee_payroll set salary = '3000000.00' where name = 'Terisa';
+Query OK, 1 row affected (0.22 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> Select * from employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | BILL    | M      | 1000000 | 2018-01-03 |
+|  2 | Terisa  | F      | 3000000 | 2019-11-13 |
+|  3 | Charlie | M      | 3000000 | 2020-05-21 |
++----+---------+--------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql>
